@@ -6,6 +6,8 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import PlayersManager from "@/components/Lobby/PlayersManager";
+import CardPrice from "@/components/Lobby/CardPrice";
 
 export default function Home() {
   return (
@@ -13,38 +15,13 @@ export default function Home() {
       <div className="inline-block max-w-xl text-center justify-center">
         <span className={title()}>Play&nbsp;</span>
         <span className={title({ color: "violet" })}>Bingo&nbsp;</span>
-        
       </div>
-
       <div className="flex gap-3 mt-40">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
-        >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
+        <PlayersManager />
+        <CardPrice />
       </div>
 
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
-      </div>
+      
     </section>
   );
 }
