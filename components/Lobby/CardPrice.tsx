@@ -1,4 +1,5 @@
 'use client'
+import { useGameStore } from "@/store/useGameStore";
 import {
     Modal,
     ModalContent,
@@ -7,7 +8,10 @@ import {
     ModalFooter,
     Button,
     useDisclosure,
+    Form,
+    NumberInput,
 } from "@heroui/react";
+import { useState } from "react";
 
 
 
@@ -24,41 +28,90 @@ const MoneyIcon = () => {
 
 export default function CardPrice() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [cardPrice, setCardPrice] = useState<number>(10000);
+    const [errors, setErrors] = useState({});
+    
+    const setCardValue = useGameStore((state)=>state.setCardValue);
+    // Real-time password validation
+    const getCardPriceError = (value) => {
+        if (value <= 0) {
+            return "لطفا مقدار صحیح وارد کنید";
+        }
+        if (!Number.isInteger(value)) {
+            return "لطفا مقدار صحیح وارد کنید";
+        }
+        return null;
+    };
+    
+    
+  
+    const onSubmit = (e) => {
+        e.preventDefault();
+    
+        // Custom validation checks
+        const newErrors = {};
+    
+        
+        const nameError = getCardPriceError(cardPrice);
+    
+        if (nameError) {
+            newErrors.name = nameError;
+        }
+    
+        
+       
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+    
+            return;
+        }
+        // Clear errors and submit
+        setErrors({});
+        setCardValue(cardPrice);
+        
+    
+    };
+    
     return (
         <>
             <Button color="secondary" startContent={<MoneyIcon />} className="text-xl" size="lg" onPress={onOpen}>مبلغ کارت</Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                <ModalContent>
+            <Modal size="2xl" isOpen={isOpen} onOpenChange={onOpenChange}>
+                <ModalContent dir="rtl">
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">مبلغ کارت</ModalHeader>
                             <ModalBody>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                                    risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                                    quam.
-                                </p>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                                    risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                                    quam.
-                                </p>
-                                <p>
-                                    Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit dolor
-                                    adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. Velit duis sit
-                                    officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. Et mollit incididunt
-                                    nisi consectetur esse laborum eiusmod pariatur proident Lorem eiusmod et. Culpa
-                                    deserunt nostrud ad veniam.
-                                </p>
+                                <Form
+                                    className="w-full justify-center items-center space-y-4"
+                                    validationErrors={errors}
+                                    onSubmit={onSubmit}
+                                >
+                                    <div className="flex flex-col gap-4 w-[250px]">
+                                        <NumberInput
+                                            className="max-w-xs"
+                                            defaultValue={10000}
+                                            value={cardPrice}
+                                            onValueChange={(value) => setCardPrice(value)}
+                                            isInvalid={getCardPriceError(cardPrice) !== null}
+                                            errorMessage={getCardPriceError(cardPrice)}
+                                            label="ارزش هر کارت"
+                                            labelPlacement="outside"
+                                            placeholder="ارزش کارت را مشخص کنید"
+                                            variant="bordered"
+                                            step={1000}
+                                        />
+
+                                        <div className="flex gap-4 mb-4 justify-center">
+                                            <Button color="success" variant="solid"  className="w-3/5" type="submit">
+                                                ثبت
+                                            </Button>
+                                            
+                                        </div>
+                                    </div>
+    
+                                </Form>
                             </ModalBody>
-                            <ModalFooter>
-                                <Button color="danger" variant="light" onPress={onClose}>
-                                    Close
-                                </Button>
-                                <Button color="primary" onPress={onClose}>
-                                    Action
-                                </Button>
-                            </ModalFooter>
+    
                         </>
                     )}
                 </ModalContent>
@@ -66,3 +119,5 @@ export default function CardPrice() {
         </>
     )
 };
+
+

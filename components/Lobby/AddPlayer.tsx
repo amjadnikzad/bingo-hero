@@ -45,7 +45,6 @@ export default function AddPlayer(props:AddPlayerFormProps) {
         displayName: '',
         cards: 1,
       });
-    const [submitted, setSubmitted] = useState(null);
     const [errors, setErrors] = useState({});
 
     const addPlayer = useGameStore((state)=>state.addPlayer);
@@ -129,7 +128,6 @@ export default function AddPlayer(props:AddPlayerFormProps) {
                                 <Form
                                     className="w-full justify-center items-center space-y-4"
                                     validationErrors={errors}
-                                    onReset={() => setSubmitted(null)}
                                     onSubmit={onSubmit}
                                 >
                                     <div className="flex flex-col gap-4 w-[250px]">

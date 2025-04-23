@@ -31,7 +31,17 @@ export const useGameStore = create<GameState>((set, get) => ({
   cardValue: 0,
   players: [],
 
-  setCardValue: (value) => set({ cardValue: value }),
+  setCardValue: (value) => {
+    addToast({
+      title: 'مقدار کارت تعیین شد',
+      description: `مقدار جدید کارت: ${value} تومان`,
+      variant: 'flat',
+      color: 'warning',
+      timeout: 4500,
+    });
+  
+    set({ cardValue: value });
+  },
   setPlayers: (players) => set({ players }),
 
   addPlayer: (cards, name, displayName) =>
