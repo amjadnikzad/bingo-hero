@@ -6,7 +6,6 @@ import { useState } from "react";
 export default function Winners() {
     const players = useGameStore((state) => state.players );
 
-
     const [lineWin,setLineWin] = useState<any>(null);
     const [cartWin,setCartWin] = useState<any>(null);
 
