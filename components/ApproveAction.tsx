@@ -23,6 +23,8 @@ type Player = {
 
 type AddPlayerFormProps = {
     renderButton:(modalHandler:()=>void) => ReactElement<ButtonProps>;
+    actionTitle:string;
+    successAction:(id:number)=>void;
     player:Player
 }
 
@@ -37,12 +39,12 @@ const PlusIcon = () => {
     );
 };
 
-export default function DeletePlayer(props:AddPlayerFormProps) {
+export default function AprroveAction(props:AddPlayerFormProps) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const button = props.renderButton(onOpen);
     const deletePlayer = useGameStore((state)=>state.removePlayer);
-    const deletePlayerHandler = (id:number)=>{
-        deletePlayer(id);
+    const approveHandler = ()=>{
+        props.successAction(props.player.id);
     };
     return (
         <>
@@ -51,12 +53,12 @@ export default function DeletePlayer(props:AddPlayerFormProps) {
                 <ModalContent dir="rtl">
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">مدیریت بازیکنان</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">{props.actionTitle}</ModalHeader>
                             <ModalBody>
-                                <p className="text-bold text-lg mb-4">آیا میخواهید  {props.player.displayName} از بازی حذف شود ؟</p>
+                                <p className="text-bold text-lg mb-4">آیا اطمینان دارید که{props.player.name} برنده شده است؟</p>
                                 <div className='flex gap-4 justify-center mb-6'> 
-                                    <Button variant="solid" color='danger' onPress={()=>deletePlayerHandler(props.player.id)}>بله</Button>
-                                    <Button variant="ghost" color='default' onPress={()=>{}}>لغو</Button>
+                                    <Button variant="solid" color='danger' onPress={approveHandler}>بله</Button>
+                                    <Button variant="ghost" color='default' onPress={onClose}>خیر</Button>
                                 </div>
                             </ModalBody>
 

@@ -45,7 +45,7 @@ const PlusIcon = () => {
 };
 
 export default function EditPlayer(props:EditPlayerFormProps) {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
     const button = props.renderButton(onOpen);
     const updatePlayer = useGameStore((state)=>state.updatePlayer);
       
@@ -57,7 +57,6 @@ export default function EditPlayer(props:EditPlayerFormProps) {
       
     const [errors, setErrors] = useState({});
 
-    // Real-time password validation
     const getCardsError = (value) => {
         if (value <= 0) {
             return "لطفا مقدار صحیح وارد کنید";
@@ -117,12 +116,7 @@ export default function EditPlayer(props:EditPlayerFormProps) {
         // Clear errors and submit
         setErrors({});
         updatePlayer(props.player.id,{cards:form.cards,name:form.name,displayName:form.displayName});
-        setForm({
-            name: '',
-            displayName: '',
-            cards: 1,
-          });
-
+        onClose();
     };
     
     return (
@@ -132,7 +126,7 @@ export default function EditPlayer(props:EditPlayerFormProps) {
                 <ModalContent dir="rtl">
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">اضافه کردن بازیکن جدید</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1"> ویرایش اطلاعات بازیکن  </ModalHeader>
                             <ModalBody>
                                 <Form
                                     className="w-full justify-center items-center space-y-4"

@@ -27,7 +27,7 @@ const MoneyIcon = () => {
 };
 
 export default function CardPrice() {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
     const [cardPrice, setCardPrice] = useState<number>(10000);
     const [errors, setErrors] = useState({});
     
@@ -68,8 +68,8 @@ export default function CardPrice() {
         // Clear errors and submit
         setErrors({});
         setCardValue(cardPrice);
+        onClose();
         
-    
     };
     
     return (
@@ -101,11 +101,12 @@ export default function CardPrice() {
                                             step={1000}
                                         />
 
+
                                         <div className="flex gap-4 mb-4 justify-center">
                                             <Button color="success" variant="solid"  className="w-3/5" type="submit">
                                                 ثبت
                                             </Button>
-                                            
+    
                                         </div>
                                     </div>
     

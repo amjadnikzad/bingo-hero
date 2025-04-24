@@ -20,7 +20,7 @@ const DigitDisplay: React.FC<DigitDisplayProps> = () => {
     const [displayValue, setDisplayValue] = useState(lastNumber);
     const [isBlinking, setIsBlinking] = useState(false);
     const prevNumber = useRef(lastNumber);
-
+    
     //check if useEffect is needed
     useEffect(() => {
         if (prevNumber.current !== lastNumber) {
@@ -60,7 +60,7 @@ const DigitDisplay: React.FC<DigitDisplayProps> = () => {
                 ))}
             </div>
             <div>
-                <Button onPress={generateUniqueNumber} size="md" color="primary">NEXT</Button>
+                <Button onPress={generateUniqueNumber} size="md" variant="shadow" color="warning">BINGO</Button>
             </div>
 
         </div>

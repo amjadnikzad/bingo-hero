@@ -10,8 +10,10 @@ type Player = {
 } // Replace this later with actual player type
 
 type GameState = {
-  //lineWinner
-  //cardWinner
+  lineWinner:Player | null
+  cardWinner:Player | null
+  assignLineWinner:(id:Player['id'])=> void
+  assignCardWinner:(id:Player['id'])=> void
   cardValue: number
   players: Player[]
   setCardValue: (value: number) => void
@@ -30,6 +32,35 @@ type GameState = {
 export const useGameStore = create<GameState>((set, get) => ({
   cardValue: 0,
   players: [],
+  lineWinner:null,
+  cardWinner:null,
+  assignLineWinner: (id) => {
+    const player = get().players.find((p) => p.id === id)
+    if (player) {
+      set({ lineWinner: player })
+      addToast({
+        title: 'برنده خط تعیین شد',
+        description: `${player.displayName} به عنوان برنده خط انتخاب شد.`,
+        variant: 'flat',
+        color: 'success',
+        timeout: 3500,
+      })
+    }
+  },
+
+  assignCardWinner: (id) => {
+    const player = get().players.find((p) => p.id === id)
+    if (player) {
+      set({ cardWinner: player })
+      addToast({
+        title: 'برنده کارت تعیین شد',
+        description: `${player.displayName} به عنوان برنده کارت انتخاب شد.`,
+        variant: 'flat',
+        color: 'success',
+        timeout: 3500,
+      })
+    }
+  },
 
   setCardValue: (value) => {
     addToast({

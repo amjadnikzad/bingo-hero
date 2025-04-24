@@ -37,7 +37,7 @@ const PlusIcon = () => {
 };
 
 export default function AddPlayer(props:AddPlayerFormProps) {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
     const button = props.renderButton(onOpen);
    
     const [form, setForm] = useState<PlayerFormData>({
@@ -75,7 +75,7 @@ export default function AddPlayer(props:AddPlayerFormProps) {
     };
     const onSubmit = (e) => {
         e.preventDefault();
-
+        const action = e.nativeEvent.submitter.value;
         // Custom validation checks
         const newErrors = {};
 
@@ -113,9 +113,9 @@ export default function AddPlayer(props:AddPlayerFormProps) {
             displayName: '',
             cards: 1,
           });
-
+        if(action) onClose();
     };
-    
+   
     return (
         <>
             {button}
@@ -170,11 +170,13 @@ export default function AddPlayer(props:AddPlayerFormProps) {
 
 
 
-                                        <div className="flex gap-4 mb-4 justify-center">
-                                            <Button color="success" variant="solid" startContent={<PlusIcon />} className="w-3/5" type="submit">
-                                                ثبت
+                                        <div className="flex gap-4 mb-4 px-8 justify-center">
+                                            <Button color="secondary" variant="solid" startContent={<PlusIcon />} className="w-3/5" type="submit">
+                                                بازیکن جدید
                                             </Button>
-                                            
+                                            <Button  color="success" variant="solid"  className="w-3/5" value='final' type="submit">
+                                                 ثبت نهایی
+                                            </Button>
                                         </div>
                                     </div>
 
