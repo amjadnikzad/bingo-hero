@@ -86,7 +86,7 @@ export default function Winners() {
         <div className="flex justify-between mt-20 gap-8">
            
             {/* <Select 
-            isDisabled={lineWin || generatedNumbersCount<5}
+            isDisabled={}
             items={players}
             selectedKeys={lineWin}
             className="max-w-3xl w-[180px]"
@@ -98,7 +98,7 @@ export default function Winners() {
                 )}
             </Select> */}
              <Select 
-            isDisabled={lineWin || !lineWin || generatedNumbersCount<15}
+            isDisabled={lineWin || generatedNumbersCount<5}
             selectedKeys={lineWin}
             onSelectionChange={setLineWin}
             className="max-w-3xl w-[180px]"
