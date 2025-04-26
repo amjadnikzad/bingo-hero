@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, useDisclosure } from "@heroui/react"; // assuming you use Hero UI modal
 import { useGameStore } from "@/store/useGameStore";
@@ -12,7 +12,12 @@ export default function LineWinSelect() {
   const setLineWinner = useGameStore((state)=> state.assignLineWinner);
   const { generatedNumbers } = useBingo();
   const generatedNumbersCount = generatedNumbers.length;
-  const audio = new Audio("/sounds/ameneh.mp3");
+  useEffect(() => {
+    if (typeof window === "undefined") return; // guard for server-side
+
+    const audio = new Audio("/sounds/click.mp3");
+    
+  }, []);
   const lineWinAnimationShowed = useRef(false);
   const handleLineWin = () => {
     const end = Date.now() + 2 * 1000; // 3 seconds
