@@ -49,7 +49,7 @@ export default function LineWinSelect() {
 
   useEffect(() => {
     if (typeof window === "undefined") return; // guard for server-side
-
+    if (!lineWinAnimationShowed.current) return;
     const audio = new Audio("/sounds/ameneh.mp3");
     audio.play();
     
