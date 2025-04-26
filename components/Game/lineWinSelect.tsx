@@ -10,7 +10,8 @@ export default function LineWinSelect() {
   const players = useGameStore((state)=>state.players);
   const setLineWinner = useGameStore((state)=> state.assignLineWinner);
   const { generatedNumbers } = useBingo();
-    const generatedNumbersCount = generatedNumbers.length;
+  const generatedNumbersCount = generatedNumbers.length;
+  const audio = new Audio("/sounds/ameneh.mp3");
   const lineWinAnimationShowed = useRef(false);
   const handleLineWin = () => {
     const end = Date.now() + 2 * 1000; // 3 seconds
@@ -47,7 +48,8 @@ export default function LineWinSelect() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   if(selectedKeys.size>0 && !lineWinAnimationShowed.current) {
-    handleLineWin()
+    handleLineWin();
+    audio.play();
     lineWinAnimationShowed.current = true;
 };
   
