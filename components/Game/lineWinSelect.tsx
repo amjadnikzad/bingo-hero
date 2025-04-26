@@ -12,12 +12,7 @@ export default function LineWinSelect() {
   const setLineWinner = useGameStore((state)=> state.assignLineWinner);
   const { generatedNumbers } = useBingo();
   const generatedNumbersCount = generatedNumbers.length;
-  useEffect(() => {
-    if (typeof window === "undefined") return; // guard for server-side
-
-    const audio = new Audio("/sounds/click.mp3");
-    
-  }, []);
+  
   const lineWinAnimationShowed = useRef(false);
   const handleLineWin = () => {
     const end = Date.now() + 2 * 1000; // 3 seconds
@@ -52,10 +47,16 @@ export default function LineWinSelect() {
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [pendingKey, setPendingKey] = React.useState<string|null>(null);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return; // guard for server-side
+
+    const audio = new Audio("/sounds/ameneh.mp3");
+    audio.play();
+    
+  }, [lineWinAnimationShowed.current]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   if(selectedKeys.size>0 && !lineWinAnimationShowed.current) {
     handleLineWin();
-    audio.play();
     lineWinAnimationShowed.current = true;
 };
   
