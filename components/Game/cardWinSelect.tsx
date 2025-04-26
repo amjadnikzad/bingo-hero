@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, useDisclosure } from "@heroui/react"; // assuming you use Hero UI modal
 import { useGameStore } from "@/store/useGameStore";
@@ -15,7 +15,7 @@ export default function CardWinSelect() {
   const cardWinAnimationShowed = useRef(false);
   const lineWinner = useGameStore((state)=> state.lineWinner);
   const handleWin = () => {
-    const duration = 6.5 * 1000;
+    const duration = 8.5 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
  
@@ -58,15 +58,23 @@ export default function CardWinSelect() {
     setPendingKey(newKey);
     onOpen(); // open modal for confirmation
   };
-
+  const [playSong,setPlaySong] = useState(false);
   const confirmSelection = () => {
     setSelectedKeys(new Set([pendingKey]));
-    console.log(typeof(pendingKey));
     if(pendingKey === null) return;
     setCardWinner(pendingKey);
+    setPlaySong(true);
     setPendingKey(null);
     onClose();
   };
+  
+  useEffect(() => {
+    if (typeof window === "undefined") return; // guard for server-side
+    if (!playSong) return;
+    const audio = new Audio("/sounds/azizam.mp3");
+    audio.play();
+    
+  }, [playSong]);
 
   const cancelSelection = () => {
     setPendingKey(null);

@@ -15,7 +15,7 @@ export default function LineWinSelect() {
   
   const lineWinAnimationShowed = useRef(false);
   const handleLineWin = () => {
-    const end = Date.now() + 2 * 1000; // 3 seconds
+    const end = Date.now() + 4 * 1000; // 3 seconds
     const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
  
     const frame = () => {
