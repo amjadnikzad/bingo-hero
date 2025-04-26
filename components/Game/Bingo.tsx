@@ -6,7 +6,7 @@ import Winners from "./Winners";
 
 export default function Bingo() {
 
-
+    
 
     return (
         <BingoProvider >

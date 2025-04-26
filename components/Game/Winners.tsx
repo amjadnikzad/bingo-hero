@@ -1,20 +1,18 @@
 import { useGameStore } from "@/store/useGameStore";
-import { Select, SelectItem, useDisclosure } from "@heroui/react";
+import { Select, SelectItem, useDisclosure,useSelect } from "@heroui/react";
 import { useRef, useState } from "react";
 import { useBingo } from "./BingoContext";
 import confetti from "canvas-confetti";
-import AprroveAction from "../ApproveAction";
-import ApproveAction from "../ApproveAction";
+
+import LineWinSelect from "./lineWinSelect";
+import CardWinSelect from "./cardWinSelect";
 
 
 export default function Winners() {
     const players = useGameStore((state) => state.players );
-    const assignLineWinner = useGameStore((state)=> state.assignLineWinner);
-    const assignCardWinner = useGameStore((state)=> state.assignCardWinner);
-    const lineWinAnimationShowed = useRef(false);
     const { generatedNumbers } = useBingo();
     const generatedNumbersCount = generatedNumbers.length;
-    const [lineWin,setLineWin] = useState<any>(null);
+    const [lineWin,setLineWin] = useState<any>(undefined);
     const [cardWin,setCardWin] = useState<any>(null);
     console.log(cardWin);
     const handleWin = () => {
@@ -45,69 +43,31 @@ export default function Winners() {
           });
         }, 250);
       };
-    const handleLineWin = () => {
-        const end = Date.now() + 2 * 1000; // 3 seconds
-        const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
-     
-        const frame = () => {
-          if (Date.now() > end) return;
-     
-          confetti({
-            particleCount: 2,
-            angle: 60,
-            spread: 55,
-            startVelocity: 60,
-            origin: { x: 0, y: 0.5 },
-            colors: colors,
-          });
-          confetti({
-            particleCount: 2,
-            angle: 120,
-            spread: 55,
-            startVelocity: 60,
-            origin: { x: 1, y: 0.5 },
-            colors: colors,
-          });
-     
-          requestAnimationFrame(frame);
-        };
-     
-        frame();
-      }
-    if(cardWin) handleWin();
-    if(lineWin && !lineWinAnimationShowed.current) {
-        handleLineWin()
-        lineWinAnimationShowed.current = true;
-    };
-   
     
-   
+    if(cardWin) handleWin();
+    
+ 
     return (
         <div className="flex justify-between mt-20 gap-8">
            
             {/* <Select 
-            isDisabled={}
+            isDisabled={lineWin || generatedNumbersCount<5}
+            isOpen={!lineWin}
+            onChange={()=>{}}
+            onSelectionChange={()=>{}}
             items={players}
-            selectedKeys={lineWin}
+            selectedKeys={[lineWin]}
             className="max-w-3xl w-[180px]"
              label="برنده خط">
                 {(player)=>(
-                  <SelectItem onPress={()=>{}} key={player.id} textValue={player.displayName}>
-                    <AprroveAction actionTitle="برنده خط" player={player} successAction={assignLineWinner} renderButton={rf} />
+                  <SelectItem  key={player.id} textValue={player.displayName}>
+                    <AprroveAction actionTitle="برنده خط" handleChange={handleLineWinnerValueChange} player={player} successAction={assignLineWinner} renderButton={(mh)=><p onClick={mh}>{player.displayName}</p>} />
                   </SelectItem>
                 )}
             </Select> */}
-             <Select 
-            isDisabled={lineWin || generatedNumbersCount<5}
-            selectedKeys={lineWin}
-            onSelectionChange={setLineWin}
-            className="max-w-3xl w-[180px]"
-             label="برنده خط">
-                {players.map((player) => (
-                    <SelectItem key={player.id}>{player.displayName}</SelectItem>
-                ))}
-            </Select>
-            <Select 
+                     <LineWinSelect />
+                     <CardWinSelect />
+            {/* <Select 
             isDisabled={cardWin || !lineWin || generatedNumbersCount<15}
             selectedKeys={cardWin}
             onSelectionChange={setCardWin}
@@ -116,7 +76,7 @@ export default function Winners() {
                 {players.map((player) => (
                     <SelectItem key={player.id}>{player.displayName}</SelectItem>
                 ))}
-            </Select>
+            </Select> */}
         </div>
     )
 };
