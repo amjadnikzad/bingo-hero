@@ -43,21 +43,23 @@ export default function LineWinSelect() {
  
     frame();
   };
- 
+  const [playSong,setPlaySong] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [pendingKey, setPendingKey] = React.useState<string|null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return; // guard for server-side
-    if (!lineWinAnimationShowed.current) return;
+    if (!playSong) return;
     const audio = new Audio("/sounds/ameneh.mp3");
     audio.play();
     
-  }, [lineWinAnimationShowed.current]);
+  }, [playSong]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   if(selectedKeys.size>0 && !lineWinAnimationShowed.current) {
     handleLineWin();
     lineWinAnimationShowed.current = true;
+    setPlaySong(true);
 };
   
   const handleSelectionChange = (newKeys) => {
