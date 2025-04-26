@@ -1,3 +1,4 @@
+'use client'
 import React, { useRef } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, useDisclosure } from "@heroui/react"; // assuming you use Hero UI modal
