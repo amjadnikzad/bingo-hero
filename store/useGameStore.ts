@@ -4,7 +4,7 @@ type Player = {
   cards: number
   name: string
   displayName: string
-  id: number
+  id: string
   gain: number
   loss: number
 } // Replace this later with actual player type
@@ -77,12 +77,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   addPlayer: (cards, name, displayName) =>
     set((state) => {
-      const usedIds = state.players.map((p) => p.id)
+      const usedIds = state.players.map((p) => Number.parseInt(p.id));
       let newId = 1
       while (usedIds.includes(newId)) newId++
 
       const player: Player = {
-        id: newId,
+        id: newId.toString(),
         cards,
         name,
         displayName: displayName?.trim() ? displayName : name,
