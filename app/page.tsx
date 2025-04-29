@@ -16,6 +16,7 @@ import TestSelect from "@/components/Game/lineWinSelect";
 
 export default function Home() {
   const players  = useGameStore((state)=>state.players);
+  const addLoss  = useGameStore((state)=>state.addLoss);
   const cardPrice = useGameStore((state)=>state.cardValue);
   const router = useRouter();
   function gameStartHandler (){
@@ -41,6 +42,9 @@ export default function Home() {
       })
       return;
     };
+    players.map((player)=>{
+      addLoss(player.id,player.cards*cardPrice);
+    })
     router.push('/Bingo');
   };
   return (
