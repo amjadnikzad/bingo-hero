@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, useDisclosure } from "@heroui/react"; // assuming you use Hero UI modal
 import { useGameStore } from "@/store/useGameStore";
@@ -10,7 +10,15 @@ import { useBingo } from "./BingoContext";
 export default function LineWinSelect() {
   const players = useGameStore((state)=>state.players);
   const setLineWinner = useGameStore((state)=> state.assignLineWinner);
-  const { generatedNumbers } = useBingo();
+  const lineWinner = useGameStore((state)=> state.lineWinner);
+  const cardPrice = useGameStore((state)=> state.cardValue);
+  const addGain = useGameStore((state)=> state.addGain);
+  const allCards = players.reduce((acc,player)=>{
+    return acc+player.cards;
+  },0);
+  const gameValue = allCards * cardPrice ;
+  const lineWinGain = gameValue * 3 / 10;
+  const generatedNumbers = useGameStore((state)=> state.generatedNumbers);
   const generatedNumbersCount = generatedNumbers.length;
   
   const lineWinAnimationShowed = useRef(false);
@@ -43,24 +51,26 @@ export default function LineWinSelect() {
  
     frame();
   };
-  const [playSong,setPlaySong] = React.useState(false);
+  const [playWinEffect,setPlayWinEffect] = React.useState(false);
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [pendingKey, setPendingKey] = React.useState<string|null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return; // guard for server-side
-    if (!playSong) return;
+    if (!playWinEffect) return;
     const audio = new Audio("/sounds/ameneh.mp3");
+    handleLineWin();
     audio.play();
-    
-  }, [playSong]);
+    setPlayWinEffect(false)
+  }, [playWinEffect]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  if(selectedKeys.size>0 && !lineWinAnimationShowed.current) {
-    handleLineWin();
-    lineWinAnimationShowed.current = true;
-    setPlaySong(true);
-};
+
+//   if(selectedKeys.size>0 && !lineWinAnimationShowed.current) {
+//     handleLineWin();
+//     lineWinAnimationShowed.current = true;
+//     setplayWinEffect(true);
+// };
   
   const handleSelectionChange = (newKeys) => {
     const newKey = [...newKeys][0];
@@ -70,9 +80,10 @@ export default function LineWinSelect() {
 
   const confirmSelection = () => {
     setSelectedKeys(new Set([pendingKey]));
-    console.log(typeof(pendingKey));
     if(pendingKey === null) return;
     setLineWinner(pendingKey);
+    addGain(pendingKey,lineWinGain);
+    setPlayWinEffect(true);
     setPendingKey(null);
     onClose();
   };
@@ -81,6 +92,10 @@ export default function LineWinSelect() {
     setPendingKey(null);
     onClose();
   };
+
+  useLayoutEffect(()=>{
+    if(lineWinner) setSelectedKeys(new Set([lineWinner.id]));
+  },[lineWinner]);
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <Select

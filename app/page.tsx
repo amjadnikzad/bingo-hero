@@ -8,21 +8,20 @@ import { addToast } from "@heroui/toast";
 import { useGameStore } from "@/store/useGameStore";
 import { useRouter } from "next/navigation";
 import { PlayIcon } from "@/components/icons";
-import TestSelect from "@/components/Game/lineWinSelect";
 
 
 
 
 
 export default function Home() {
-  const players  = useGameStore((state)=>state.players);
-  const addLoss  = useGameStore((state)=>state.addLoss);
-  const cardPrice = useGameStore((state)=>state.cardValue);
+  const players = useGameStore((state) => state.players);
+  const addLoss = useGameStore((state) => state.addLoss);
+  const cardPrice = useGameStore((state) => state.cardValue);
   const router = useRouter();
-  function gameStartHandler (){
-   
+  function gameStartHandler() {
+
     const playersCount = players.length;
-    if(playersCount < 2){
+    if (playersCount < 2) {
       addToast({
         title: '! خطا',
         description: `. تعداد بازیکنان به حد نصاب نرسیده است`,
@@ -32,7 +31,7 @@ export default function Home() {
       })
       return;
     };
-    if (!cardPrice){
+    if (!cardPrice) {
       addToast({
         title: '! خطا',
         description: `. مبلغ هر کارت را مشخص کنید`,
@@ -42,9 +41,9 @@ export default function Home() {
       })
       return;
     };
-    players.map((player)=>{
-      addLoss(player.id,player.cards*cardPrice);
-    })
+
+    addLoss();
+
     router.push('/Bingo');
   };
   return (
@@ -53,7 +52,7 @@ export default function Home() {
         <span className={title()}>Play&nbsp;</span>
         <span className={title({ color: "violet" })}>Bingo&nbsp;</span>
       </div>
-      <Button onPress={gameStartHandler} size="lg" variant="ghost" startContent={<PlayIcon/>} color="success" className="mt-36 text-xl">بینگو</Button>
+      <Button onPress={gameStartHandler} size="lg" variant="ghost" startContent={<PlayIcon />} color="success" className="mt-36 text-xl">بینگو</Button>
       <div className="flex gap-3 mt-4">
         <PlayersManager />
         <CardPrice />

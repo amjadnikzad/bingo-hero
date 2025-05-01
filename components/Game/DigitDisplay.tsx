@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Orbitron } from "next/font/google";
 import { useBingo } from "./BingoContext";
 import { Button } from "@heroui/button";
+import { useGameStore } from "@/store/useGameStore";
 
 const orbitron = Orbitron({
     weight: "700",
@@ -16,7 +17,14 @@ type DigitDisplayProps = {
 };
 
 const DigitDisplay: React.FC<DigitDisplayProps> = () => {
-    const { lastNumber,generateUniqueNumber } = useBingo();
+    // const { lastNumber,generateUniqueNumber } = useBingo();
+    const generatedNumbers = useGameStore((state)=> state.generatedNumbers);
+    const cardWinner = useGameStore((state)=> state.cardWinner);
+
+    const lastNumber = generatedNumbers[generatedNumbers.length-1] ?? 0;
+    console.log(lastNumber);
+    const generateUniqueNumber = useGameStore((state)=> state.generateUniqueNumber);
+
     const [displayValue, setDisplayValue] = useState(lastNumber);
     const [isBlinking, setIsBlinking] = useState(false);
     const prevNumber = useRef(lastNumber);
@@ -60,7 +68,7 @@ const DigitDisplay: React.FC<DigitDisplayProps> = () => {
                 ))}
             </div>
             <div>
-                <Button onPress={generateUniqueNumber} size="md" variant="shadow" color="warning">BINGO</Button>
+                <Button isDisabled={Boolean(cardWinner)} onPress={generateUniqueNumber} size="md" variant="shadow" color="warning">BINGO</Button>
             </div>
 
         </div>

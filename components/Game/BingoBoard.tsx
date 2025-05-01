@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useBingo } from './BingoContext';
+import { useGameStore } from '@/store/useGameStore';
 
 interface BingoCellProps {
   number: number;
@@ -27,7 +28,7 @@ const BingoCell: React.FC<BingoCellProps> = ({ number, isLit, isLastLit }) => {
   return (
     <div
       className={`
-        w-[35px] h-[35px] border border-gray-400 flex items-center justify-center cursor-pointer select-none transition-all duration-300 rounded-md
+        w-[40px] h-[40px]  border-2 rounded-full border-gray-400 flex items-center justify-center cursor-pointer select-none transition-all duration-300 
         ${isLit ? (isLastLit ? 'bg-orange-500 text-white' : 'bg-green-500 text-white') : 'bg-white text-gray-800'}
         ${blink ? 'animate-blink' : ''}
       `}
@@ -38,30 +39,18 @@ const BingoCell: React.FC<BingoCellProps> = ({ number, isLit, isLastLit }) => {
 };
 
 const BingoBoard: React.FC = () => {
-  // const [litNumbers, setLitNumbers] = useState<number[]>([]);
-  
-  // const [lastLitNumber, setLastLitNumber] = useState<number | null>(null);
-  const { lastNumber,generatedNumbers } = useBingo();
+  // const { lastNumber,generatedNumbers } = useBingo();
+  const generatedNumbers = useGameStore((state)=> state.generatedNumbers);
+  const lastNumber = generatedNumbers[generatedNumbers.length - 1] ?? 0;
   const litNumbers = generatedNumbers;
   const lastLitNumber = lastNumber;
-  // const handleLit = (number: number) => {
-  //   if (!litNumbers.includes(number)) {
-  //     setLitNumbers([...litNumbers, number]);
-  //     setLastLitNumber(number);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if(litNumbers.length === 0) {
-  //     setLastLitNumber(null);
-  //   }
-  // },[litNumbers])
+  
 
   const numbers = Array.from({ length: 90 }, (_, i) => i + 1);
 
   return (
     <div className="bg-gray-100 p-8 rounded-lg shadow-md">
-      <div className="grid grid-cols-10 gap-2">
+      <div className="grid grid-cols-10 w-fit gap-4">
         {numbers.map((number) => (
           <BingoCell
             key={number}

@@ -10,7 +10,7 @@ export default function Bingo() {
 
     return (
         <BingoProvider >
-            <div className="flex flex-row gap-36 items-center justify-center">
+            <div className="flex flex-row gap-24 items-center justify-center">
                 <BingoBoard />
                 <div className="flex flex-col gap-8">
                     <DigitDisplay />

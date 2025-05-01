@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, useDisclosure } from "@heroui/react"; // assuming you use Hero UI modal
 import { useGameStore } from "@/store/useGameStore";
@@ -10,15 +10,23 @@ import { useBingo } from "./BingoContext";
 export default function CardWinSelect() {
   const players = useGameStore((state)=>state.players);
   const setCardWinner = useGameStore((state)=> state.assignCardWinner);
-  const { generatedNumbers } = useBingo();
-    const generatedNumbersCount = generatedNumbers.length;
+  const generatedNumbers = useGameStore((state)=> state.generatedNumbers);
+  const generatedNumbersCount = generatedNumbers.length;
+  const cardPrice = useGameStore((state)=> state.cardValue);
+  const addGain = useGameStore((state)=> state.addGain);
+  const allCards = players.reduce((acc,player)=>{
+    return acc+player.cards;
+  },0);
+  const gameValue = allCards * cardPrice ;
+  const cardWinGain = gameValue * 7 / 10;
+
   const cardWinAnimationShowed = useRef(false);
   const lineWinner = useGameStore((state)=> state.lineWinner);
   const handleWin = () => {
     const duration = 8.5 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
- 
+    
     const randomInRange = (min: number, max: number) =>
       Math.random() * (max - min) + min;
  
@@ -43,43 +51,51 @@ export default function CardWinSelect() {
     }, 250);
   };
 
+  const cardWinner = useGameStore((state)=> state.cardWinner);
+
  
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [pendingKey, setPendingKey] = React.useState<string|null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  if(selectedKeys.size>0 && !cardWinAnimationShowed.current) {
-    handleWin();
-    cardWinAnimationShowed.current = true;
-};
+//   if(selectedKeys.size>0 && !cardWinAnimationShowed.current) {
+//     handleWin();
+//     cardWinAnimationShowed.current = true;
+// };
   
   const handleSelectionChange = (newKeys) => {
     const newKey = [...newKeys][0];
     setPendingKey(newKey);
     onOpen(); // open modal for confirmation
   };
-  const [playSong,setPlaySong] = useState(false);
+  const [playWinEffect,setPlayWinEffect] = useState(false);
   const confirmSelection = () => {
     setSelectedKeys(new Set([pendingKey]));
     if(pendingKey === null) return;
     setCardWinner(pendingKey);
-    setPlaySong(true);
+    addGain(pendingKey,cardWinGain);
+    setPlayWinEffect(true);
     setPendingKey(null);
     onClose();
   };
   
   useEffect(() => {
     if (typeof window === "undefined") return; // guard for server-side
-    if (!playSong) return;
+    if (!playWinEffect) return;
     const audio = new Audio("/sounds/azizam.mp3");
+    handleWin();
     audio.play();
-    
-  }, [playSong]);
+    setPlayWinEffect(false)
+  }, [playWinEffect]);
 
   const cancelSelection = () => {
     setPendingKey(null);
     onClose();
   };
+
+  useLayoutEffect(()=>{
+    if(cardWinner) setSelectedKeys(new Set([cardWinner.id]));
+  },[lineWinner]);
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <Select
